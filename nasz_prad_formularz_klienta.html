@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b57d0">
+  <title>Nasz Prąd SA — formularz klienta</title>
+  <style>
+    :root{
+      --bg:#f4f7fb; --card:#fff; --text:#17202a; --muted:#667085;
+      --line:#d9e1ec; --blue:#0b57d0; --blue2:#0842a0;
+      --green:#137333; --red:#b3261e; --soft:#eef4ff;
+      --radius:18px; --shadow:0 10px 30px rgba(20,40,70,.07);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      background:linear-gradient(180deg,#eaf2ff 0,#f7f9fc 280px,var(--bg) 100%);
+      color:var(--text);
+    }
+    .wrap{width:min(860px,calc(100% - 22px));margin:auto;padding:18px 0 60px}
+    .hero{
+      background:linear-gradient(135deg,#0b57d0,#4d80df);
+      color:#fff;padding:25px;border-radius:22px;
+      box-shadow:0 14px 36px rgba(30,55,90,.14)
+    }
+    .hero .brand{font-size:14px;font-weight:800;opacity:.9;margin-bottom:8px}
+    .hero h1{margin:0 0 8px;font-size:clamp(27px,5vw,41px);line-height:1.08}
+    .hero p{margin:0;color:#edf3ff;max-width:720px}
+    .card{
+      background:var(--card);border:1px solid #dfe6ef;border-radius:var(--radius);
+      padding:20px;margin:14px 0;box-shadow:var(--shadow)
+    }
+    h2{margin:0 0 5px;font-size:21px}
+    .sub{margin:0 0 16px;color:var(--muted);font-size:14px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .full{grid-column:1/-1}
+    label{display:block;font-size:14px;font-weight:800;margin-bottom:6px}
+    input,select,textarea{
+      width:100%;border:1px solid var(--line);border-radius:12px;
+      padding:12px 13px;font:inherit;background:#fff;color:var(--text);outline:none
+    }
+    input:focus,select:focus,textarea:focus{
+      border-color:var(--blue);box-shadow:0 0 0 3px rgba(11,87,208,.12)
+    }
+    textarea{min-height:108px;resize:vertical}
+    .upload{
+      min-height:170px;border:2px dashed #aab8cc;border-radius:16px;background:#f8faff;
+      display:grid;place-items:center;text-align:center;padding:20px;cursor:pointer
+    }
+    .upload strong{color:var(--blue)}
+    .upload input{display:none}
+    .preview{
+      display:none;width:100%;max-height:470px;object-fit:contain;margin-top:12px;
+      border:1px solid var(--line);border-radius:14px;background:#edf1f5
+    }
+    .chips{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .chip{
+      display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);
+      border-radius:13px;padding:12px;background:#fafcff;cursor:pointer;margin:0
+    }
+    .chip:hover{border-color:#b4c4dc;background:#f4f8ff}
+    .chip input{
+      width:20px;height:20px;margin:1px 0 0;accent-color:var(--blue);flex:0 0 auto
+    }
+    .chip span{font-size:14px;font-weight:500}
+    .rating{
+      display:grid;grid-template-columns:repeat(5,1fr);gap:8px
+    }
+    .rating label{
+      margin:0;border:1px solid var(--line);border-radius:12px;padding:11px 6px;
+      text-align:center;cursor:pointer;background:#fafcff
+    }
+    .rating input{display:none}
+    .rating label:has(input:checked){
+      border-color:var(--blue);background:var(--soft);color:var(--blue)
+    }
+    .rating strong{display:block;font-size:20px}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+    button{
+      border:0;border-radius:12px;padding:12px 15px;font:inherit;font-weight:850;
+      cursor:pointer;display:inline-flex;justify-content:center;align-items:center
+    }
+    .primary{background:var(--blue);color:#fff}
+    .primary:hover{background:var(--blue2)}
+    .secondary{background:#edf3ff;color:#0b4da8}
+    .ghost{background:#f2f4f7;color:#344054}
+    .danger{background:#ffefee;color:var(--red)}
+    .status{display:none;margin-top:12px;padding:11px 13px;border-radius:11px;font-size:14px}
+    .status.show{display:block}
+    .status.good{background:#e9f7ed;color:var(--green)}
+    .status.bad{background:#ffefee;color:var(--red)}
+    .result{display:none}
+    .result.show{display:block}
+    .ready{
+      background:#e9f7ed;color:var(--green);padding:12px 14px;border-radius:12px;
+      font-weight:800;margin-bottom:14px
+    }
+    .post{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff}
+    .post img{width:100%;max-height:530px;object-fit:cover;background:#eef2f6}
+    .post-body{padding:18px}
+    .post-company{font-weight:900;margin-bottom:10px}
+    .post-text{white-space:pre-wrap;line-height:1.6;overflow-wrap:anywhere}
+    .mailbox-box{
+      background:#0f172a;color:#fff;border-radius:16px;padding:16px;margin-top:14px
+    }
+    .mailbox-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:12px}
+    .mailbox-item{
+      background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);
+      border-radius:12px;padding:12px
+    }
+    .mailbox-label{font-size:12px;color:#cbd5e1;margin-bottom:5px}
+    .mailbox-value{
+      min-height:29px;font-size:18px;font-weight:900;letter-spacing:.02em;
+      overflow-wrap:anywhere;user-select:all
+    }
+    .mailbox-loading{color:#dbeafe}
+    .small{font-size:12px;color:var(--muted);margin-top:7px}
+    .required{color:var(--red)}
+    .footer{text-align:center;color:var(--muted);font-size:13px;margin-top:22px}
+    @media(max-width:680px){
+      .grid,.chips,.mailbox-grid{grid-template-columns:1fr}
+      .full{grid-column:auto}
+      .actions button{flex:1 1 46%}
+      .wrap{width:min(100% - 16px,860px);padding-top:8px}
+      .card{padding:16px}
+      .hero{padding:21px 17px}
+      .rating{gap:5px}
+      .rating label{padding:9px 3px;font-size:12px}
+    }
+  </style>
+</head>
+<body>
+<main class="wrap">
+  <section class="hero">
+    <div class="brand">NASZ PRĄD SA</div>
+    <h1>Formularz klienta</h1>
+    <p>Dodaj zdjęcie, odpowiedz na kilka prostych pytań i wygeneruj naturalną, rozbudowaną wypowiedź na podstawie swoich odpowiedzi.</p>
+  </section>
+
+  <section class="card">
+    <h2>Automatyczna skrzynka tymczasowa</h2>
+    <p class="sub">Adres i hasło tworzą się automatycznie po otwarciu formularza.</p>
+    <div class="mailbox-box">
+      <div class="mailbox-grid">
+        <div class="mailbox-item">
+          <div class="mailbox-label">Adres e-mail</div>
+          <div id="tempEmail" class="mailbox-value mailbox-loading">Generowanie…</div>
+        </div>
+        <div class="mailbox-item">
+          <div class="mailbox-label">Hasło</div>
+          <div id="tempPassword" class="mailbox-value mailbox-loading">Generowanie…</div>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <button id="copyMailbox" class="secondary" type="button">Kopiuj adres i hasło</button>
+      <button id="newMailbox" class="ghost" type="button">Wygeneruj nową skrzynkę</button>
+    </div>
+    <div id="mailboxStatus" class="status"></div>
+  </section>
+
+  <section class="card">
+    <h2>1. Dodaj zdjęcie realizacji</h2>
+    <p class="sub">Zdjęcie zostanie automatycznie przygotowane do publikacji.</p>
+    <label class="upload" for="photo">
+      <span><strong>Wybierz zdjęcie</strong><br>JPG, PNG lub WEBP</span>
+      <input id="photo" type="file" accept="image/jpeg,image/png,image/webp">
+    </label>
+    <img id="preview" class="preview" alt="Podgląd zdjęcia">
+    <div id="photoInfo" class="small"></div>
+  </section>
+
+  <section class="card">
+    <h2>2. Podstawowe informacje</h2>
+    <p class="sub">Te dane pozwolą dopasować treść wypowiedzi. Nie podawaj dokładnego adresu.</p>
+    <div class="grid">
+      <div>
+        <label for="city">Miejscowość <span class="required">*</span></label>
+        <input id="city" type="text" maxlength="80" placeholder="np. Częstochowa">
+      </div>
+      <div>
+        <label for="service">Z jakiej usługi korzystałeś/aś? <span class="required">*</span></label>
+        <select id="service">
+          <option value="">Wybierz</option>
+          <option value="fotowoltaika">Instalacja fotowoltaiczna</option>
+          <option value="pompa">Pompa ciepła</option>
+          <option value="magazyn">Magazyn energii</option>
+          <option value="modernizacja">Modernizacja instalacji</option>
+          <option value="serwis">Serwis lub naprawa</option>
+          <option value="inna">Inna usługa</option>
+        </select>
+      </div>
+      <div>
+        <label for="signature">Podpis pod wypowiedzią</label>
+        <select id="signature">
+          <option value="Klient">Klient</option>
+          <option value="Klient indywidualny">Klient indywidualny</option>
+          <option value="Właściciel domu">Właściciel domu</option>
+          <option value="Przedstawiciel firmy">Przedstawiciel firmy</option>
+        </select>
+      </div>
+      <div>
+        <label for="firstName">Imię, jeśli ma być widoczne</label>
+        <input id="firstName" type="text" maxlength="40" placeholder="opcjonalnie">
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>3. Jak oceniasz całą realizację?</h2>
+    <p class="sub">Ocena wpłynie na ton i długość wygenerowanej wypowiedzi.</p>
+    <div class="rating">
+      <label><input type="radio" name="rating" value="1"><strong>1</strong>słabo</label>
+      <label><input type="radio" name="rating" value="2"><strong>2</strong></label>
+      <label><input type="radio" name="rating" value="3"><strong>3</strong>dobrze</label>
+      <label><input type="radio" name="rating" value="4"><strong>4</strong></label>
+      <label><input type="radio" name="rating" value="5" checked><strong>5</strong>bardzo dobrze</label>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>4. Co było zgodne z Twoim doświadczeniem?</h2>
+    <p class="sub">Zaznacz wyłącznie prawdziwe informacje. Generator użyje różnych, losowo dobieranych sformułowań.</p>
+    <div class="chips">
+      <label class="chip"><input class="fact" type="checkbox" value="kontakt"><span>Kontakt z firmą był sprawny i konkretny</span></label>
+      <label class="chip"><input class="fact" type="checkbox" value="wyjasnienia"><span>Wszystko zostało jasno wyjaśnione</span></label>
+      <label class="chip"><input class="fact" type="checkbox" value="termin"><span>Ustalony termin został dotrzymany</span></label>
+      <label class="chip"><input class="fact" type="checkbox" value="organizacja"><span>Całość była dobrze zorganizowana</span></label>
+      <label class="chip"><input class="fact" type="checkbox" value="przebieg"><span>Realizacja przebiegła sprawnie</span></label>
+      <label class="chip"><input class="fact" type="checkbox" value="porzadek"><span>Po zakończeniu pozostawiono porządek</span></label>
+      <label class="chip"><input class="fact" type="checkbox" value="jakosc"><span>Jakość wykonania oceniam wysoko</span></label>
+      <label class="chip"><input class="fact" type="checkbox" value="efekt"><span>Jestem zadowolony/a z końcowego efektu</span></label>
+      <label class="chip"><input class="fact" type="checkbox" value="obsluga"><span>Obsługa była uprzejma i pomocna</span></label>
+      <label class="chip"><input class="fact" type="checkbox" value="dokumenty"><span>Formalności i dokumenty były zrozumiałe</span></label>
+      <label class="chip"><input class="fact" type="checkbox" value="cena"><span>Warunki cenowe były zgodne z ustaleniami</span></label>
+      <label class="chip"><input class="fact" type="checkbox" value="polecenie"><span>Mogę polecić firmę innym osobom</span></label>
+    </div>
+
+    <div style="margin-top:16px">
+      <label for="extra">Co jeszcze chcesz dodać?</label>
+      <textarea id="extra" maxlength="500" placeholder="Opcjonalnie wpisz własną informację, którą generator dołączy do wypowiedzi."></textarea>
+      <div class="small">Tekst zostanie wykorzystany dokładnie w takim znaczeniu, w jakim go wpiszesz.</div>
+    </div>
+
+    <label class="chip" style="margin-top:14px">
+      <input id="approval" type="checkbox">
+      <span>Potwierdzam, że zaznaczone informacje są prawdziwe, wypowiedź jest dobrowolna, a zdjęcie i wygenerowana treść mogą zostać opublikowane przez Nasz Prąd SA.</span>
+    </label>
+
+    <div class="actions">
+      <button id="generate" class="primary" type="button">Wygeneruj wypowiedź</button>
+      <button id="clear" class="danger" type="button">Wyczyść formularz</button>
+    </div>
+    <div id="formStatus" class="status"></div>
+  </section>
+
+  <section id="result" class="card result">
+    <div class="ready">Wypowiedź została przygotowana.</div>
+    <div class="post">
+      <img id="resultPhoto" alt="Zdjęcie realizacji">
+      <div class="post-body">
+        <div class="post-company">Nasz Prąd SA</div>
+        <div id="resultText" class="post-text"></div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="regenerate" class="primary" type="button">Wylosuj inną wersję</button>
+      <button id="copyText" class="secondary" type="button">Kopiuj tekst</button>
+      <button id="downloadPhoto" class="secondary" type="button">Pobierz zdjęcie</button>
+      <button id="sharePack" class="ghost" type="button">Udostępnij tekst i zdjęcie</button>
+      <button id="openGoogle" class="ghost" type="button">Otwórz profil firmy</button>
+    </div>
+    <div id="resultStatus" class="status"></div>
+  </section>
+
+  <p class="footer">Treść powstaje wyłącznie z odpowiedzi klienta. Generator nie dodaje niezaznaczonych informacji.</p>
+</main>
+
+<script>
+"use strict";
+
+const PROFILE_URL="https://share.google/uguboywRJptB6DIgz";
+const COMPANY="Nasz Prąd SA";
+const $=id=>document.getElementById(id);
+
+const state={
+  photoDataUrl:"",
+  photoBlob:null,
+  photoName:"realizacja.jpg",
+  finalText:"",
+  tempEmail:"",
+  tempPassword:""
+};
+
+function status(el,text,type="good"){
+  el.textContent=text;
+  el.className="status show "+type;
+}
+function clearStatus(el){
+  el.textContent="";
+  el.className="status";
+}
+function pick(list){
+  return list[Math.floor(Math.random()*list.length)];
+}
+function shuffle(list){
+  const copy=[...list];
+  for(let i=copy.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [copy[i],copy[j]]=[copy[j],copy[i]];
+  }
+  return copy;
+}
+function randomString(length,alphabet){
+  const chars=alphabet||"abcdefghjkmnpqrstuvwxyz23456789";
+  const bytes=new Uint8Array(length);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes,b=>chars[b%chars.length]).join("");
+}
+function strongPassword(){
+  return [
+    randomString(5,"ABCDEFGHJKLMNPQRSTUVWXYZ"),
+    randomString(5,"abcdefghjkmnpqrstuvwxyz"),
+    randomString(4,"23456789"),
+    randomString(2,"!@#$%")
+  ].join("");
+}
+function safeName(text){
+  return (text||"realizacja")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-zA-Z0-9_-]+/g,"-")
+    .replace(/^-+|-+$/g,"")
+    .toLowerCase().slice(0,60)||"realizacja";
+}
+function dataUrlToBlob(dataUrl){
+  const [meta,data]=dataUrl.split(",");
+  const mime=(meta.match(/data:(.*?);/)||[])[1]||"image/jpeg";
+  const bin=atob(data);
+  const arr=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) arr[i]=bin.charCodeAt(i);
+  return new Blob([arr],{type:mime});
+}
+
+async function createTemporaryMailbox(){
+  const emailEl=$("tempEmail");
+  const passwordEl=$("tempPassword");
+
+  emailEl.textContent="Generowanie…";
+  passwordEl.textContent="Generowanie…";
+  emailEl.classList.add("mailbox-loading");
+  passwordEl.classList.add("mailbox-loading");
+  clearStatus($("mailboxStatus"));
+
+  // 1secmail.com — publiczne API, brak rejestracji, obsługuje CORS
+  const SECMAIL_DOMAINS=["1secmail.com","1secmail.org","1secmail.net"];
+
+  try{
+    // Generuj losową skrzynkę przez 1secmail API
+    const genResponse=await fetch(
+      "https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1",
+      {headers:{"Accept":"application/json"}}
+    );
+    if(!genResponse.ok) throw new Error("Nie udało się pobrać adresu ("+genResponse.status+").");
+
+    const mailList=await genResponse.json();
+    if(!Array.isArray(mailList)||!mailList[0]) throw new Error("Nieprawidłowa odpowiedź API.");
+
+    const createdAddress=mailList[0];
+    const password=strongPassword();
+
+    state.tempEmail=createdAddress;
+    state.tempPassword=password;
+    emailEl.textContent=createdAddress;
+    passwordEl.textContent=password;
+    emailEl.classList.remove("mailbox-loading");
+    passwordEl.classList.remove("mailbox-loading");
+    status($("mailboxStatus"),"Skrzynka jest gotowa.","good");
+
+  }catch(err){
+    // Fallback: jeśli 1secmail niedostępny, wygeneruj adres lokalnie
+    try{
+      const user="naszprad"+Date.now().toString(36)+randomString(5);
+      const domain=SECMAIL_DOMAINS[Math.floor(Math.random()*SECMAIL_DOMAINS.length)];
+      const fallbackAddress=`${user}@${domain}`;
+      const password=strongPassword();
+
+      state.tempEmail=fallbackAddress;
+      state.tempPassword=password;
+      emailEl.textContent=fallbackAddress;
+      passwordEl.textContent=password;
+      emailEl.classList.remove("mailbox-loading");
+      passwordEl.classList.remove("mailbox-loading");
+      status($("mailboxStatus"),"Skrzynka wygenerowana lokalnie (brak połączenia z API).","good");
+    }catch(fallbackErr){
+      state.tempEmail="";
+      state.tempPassword="";
+      emailEl.textContent="Nie utworzono";
+      passwordEl.textContent="—";
+      emailEl.classList.remove("mailbox-loading");
+      passwordEl.classList.remove("mailbox-loading");
+      status($("mailboxStatus"),(err.message||"Nie udało się utworzyć skrzynki.")+" Spróbuj ponownie.","bad");
+    }
+  }
+}
+
+async function prepareImage(file){
+  if(!file) return;
+  if(!["image/jpeg","image/png","image/webp"].includes(file.type)){
+    throw new Error("Wybierz zdjęcie JPG, PNG albo WEBP.");
+  }
+  if(file.size>15*1024*1024){
+    throw new Error("Zdjęcie jest większe niż 15 MB.");
+  }
+
+  const raw=await new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>resolve(reader.result);
+    reader.onerror=()=>reject(new Error("Nie udało się odczytać zdjęcia."));
+    reader.readAsDataURL(file);
+  });
+
+  const img=await new Promise((resolve,reject)=>{
+    const image=new Image();
+    image.onload=()=>resolve(image);
+    image.onerror=()=>reject(new Error("Nie udało się otworzyć zdjęcia."));
+    image.src=raw;
+  });
+
+  const maxSide=1800;
+  const scale=Math.min(1,maxSide/Math.max(img.naturalWidth,img.naturalHeight));
+  const width=Math.max(1,Math.round(img.naturalWidth*scale));
+  const height=Math.max(1,Math.round(img.naturalHeight*scale));
+
+  const canvas=document.createElement("canvas");
+  canvas.width=width;
+  canvas.height=height;
+  const ctx=canvas.getContext("2d",{alpha:false});
+  ctx.fillStyle="#fff";
+  ctx.fillRect(0,0,width,height);
+  ctx.drawImage(img,0,0,width,height);
+
+  state.photoDataUrl=canvas.toDataURL("image/jpeg",.9);
+  state.photoBlob=dataUrlToBlob(state.photoDataUrl);
+  state.photoName="realizacja-"+new Date().toISOString().slice(0,10)+".jpg";
+
+  $("preview").src=state.photoDataUrl;
+  $("preview").style.display="block";
+  $("photoInfo").textContent=`Zdjęcie gotowe: ${width} × ${height} px`;
+}
+
+const serviceNames={
+  fotowoltaika:"instalacji fotowoltaicznej",
+  pompa:"pompy ciepła",
+  magazyn:"magazynu energii",
+  modernizacja:"modernizacji instalacji",
+  serwis:"serwisu lub naprawy",
+  inna:"wykonanej usługi"
+};
+
+const intros={
+  1:[
+    "Nie wszystko poszło tak, jak liczyłem/am.",
+    "Mam kilka uwag po tej realizacji.",
+    "Piszę krótko, jak wyglądała współpraca."
+  ],
+  2:[
+    "Było w porządku, ale nie idealnie.",
+    "Ogólnie dało się to zrobić, choć mam kilka uwag.",
+    "Mam mieszane odczucia po tej usłudze."
+  ],
+  3:[
+    "Ogólnie jestem zadowolony/a.",
+    "Współpraca przebiegła dobrze.",
+    "Całość oceniam na plus."
+  ],
+  4:[
+    "Jestem zadowolony/a z tej współpracy.",
+    "Wszystko poszło naprawdę dobrze.",
+    "Mam dobre wrażenia po całej realizacji."
+  ],
+  5:[
+    "Jestem bardzo zadowolony/a.",
+    "Wszystko poszło tak, jak trzeba.",
+    "Cała współpraca była naprawdę na plus."
+  ]
+};
+
+const serviceParagraphs={
+  fotowoltaika:[
+    "Chodziło o montaż fotowoltaiki.",
+    "Firma robiła u mnie instalację fotowoltaiczną.",
+    "Zleciłem/am montaż paneli fotowoltaicznych."
+  ],
+  pompa:[
+    "Chodziło o pompę ciepła.",
+    "Firma zajmowała się pompą ciepła.",
+    "Zleciłem/am usługę związaną z pompą ciepła."
+  ],
+  magazyn:[
+    "Chodziło o magazyn energii.",
+    "Firma robiła u mnie magazyn energii.",
+    "Zleciłem/am montaż magazynu energii."
+  ],
+  modernizacja:[
+    "Chodziło o modernizację instalacji.",
+    "Firma poprawiała istniejącą instalację.",
+    "Zleciłem/am przeróbkę i modernizację instalacji."
+  ],
+  serwis:[
+    "Chodziło o serwis i naprawę.",
+    "Firma zajęła się usterką.",
+    "Zleciłem/am sprawdzenie i naprawę instalacji."
+  ],
+  inna:[
+    "Chodziło o wcześniej ustaloną usługę.",
+    "Firma wykonała u mnie umówiony zakres prac.",
+    "Zleciłem/am firmie ustaloną wcześniej usługę."
+  ]
+};
+
+const factVariants={
+  kontakt:[
+    "Kontakt był dobry.",
+    "Dało się szybko dogadać.",
+    "Na pytania dostawałem/am konkretne odpowiedzi.",
+    "Nie było problemu z kontaktem."
+  ],
+  wyjasnienia:[
+    "Wszystko zostało jasno wyjaśnione.",
+    "Nie było zbędnego gadania.",
+    "Dostałem/am proste i konkretne informacje.",
+    "Wiedziałem/am, co i jak będzie zrobione."
+  ],
+  termin:[
+    "Termin został dotrzymany.",
+    "Przyjechali zgodnie z ustaleniami.",
+    "Nie było niepotrzebnych opóźnień.",
+    "Wszystko odbyło się na czas."
+  ],
+  organizacja:[
+    "Całość była dobrze ogarnięta.",
+    "Wszystko miało swój porządek.",
+    "Nie było chaosu.",
+    "Prace były dobrze zorganizowane."
+  ],
+  przebieg:[
+    "Prace poszły sprawnie.",
+    "Całość przebiegła bez większych problemów.",
+    "Nie było zbędnych przestojów.",
+    "Wszystko poszło dość szybko."
+  ],
+  porzadek:[
+    "Po pracy został porządek.",
+    "Ekipa po sobie posprzątała.",
+    "Nie zostałem/am z bałaganem.",
+    "Miejsce po pracach było ogarnięte."
+  ],
+  jakosc:[
+    "Wykonanie wygląda solidnie.",
+    "Całość jest zrobiona porządnie.",
+    "Nie mam uwag do jakości.",
+    "Widać, że zrobiono to starannie."
+  ],
+  efekt:[
+    "Jestem zadowolony/a z efektu.",
+    "Końcowy wynik jest taki, jak chciałem/am.",
+    "Wszystko działa tak, jak powinno.",
+    "Efekt końcowy oceniam bardzo dobrze."
+  ],
+  obsluga:[
+    "Obsługa była miła i pomocna.",
+    "Ludzie byli w porządku.",
+    "Podejście do klienta było normalne i konkretne.",
+    "Dało się spokojnie wszystko ustalić."
+  ],
+  dokumenty:[
+    "Formalności były proste.",
+    "Dokumenty były jasno wyjaśnione.",
+    "Nie było problemu z papierami.",
+    "Wszystko dało się łatwo ogarnąć."
+  ],
+  cena:[
+    "Cena była zgodna z ustaleniami.",
+    "Nie doszły żadne dziwne koszty.",
+    "Rozliczenie było jasne.",
+    "Zapłaciłem/am tyle, ile było ustalone."
+  ],
+  polecenie:[
+    "Mogę polecić tę firmę.",
+    "Skorzystałbym/skorzystałabym jeszcze raz.",
+    "Mam dobre zdanie o tej firmie.",
+    "Z mojej strony firma jest do polecenia."
+  ]
+};
+
+const closings={
+  1:[
+    "Mam nadzieję, że firma wyciągnie z tego wnioski.",
+    "Tak wyglądało to z mojej strony."
+  ],
+  2:[
+    "Było poprawnie, ale da się to zrobić lepiej.",
+    "Oceniam tę usługę raczej średnio."
+  ],
+  3:[
+    "Ogólnie było dobrze.",
+    "Całość oceniam pozytywnie."
+  ],
+  4:[
+    "Jestem zadowolony/a i mogę to polecić.",
+    "Z mojej strony wszystko było na plus."
+  ],
+  5:[
+    "Jestem bardzo zadowolony/a i polecam.",
+    "Naprawdę dobra robota.",
+    "Z czystym sumieniem mogę polecić."
+  ]
+};
+
+function selectedFacts(){
+  return [...document.querySelectorAll(".fact:checked")].map(el=>el.value);
+}
+function currentRating(){
+  return Number(document.querySelector('input[name="rating"]:checked')?.value||5);
+}
+function publicSignature(){
+  const name=$("firstName").value.trim();
+  return name||$("signature").value;
+}
+function buildPublication(){
+  const city=$("city").value.trim();
+  const service=$("service").value;
+  const rating=currentRating();
+  const facts=shuffle(selectedFacts());
+  const extra=$("extra").value.trim();
+
+  const paragraphs=[
+    pick(intros[rating]),
+    pick(serviceParagraphs[service]),
+    ...facts.map(key=>pick(factVariants[key]))
+  ];
+
+  if(extra){
+    paragraphs.push(extra);
+  }
+
+  paragraphs.push(pick(closings[rating]));
+
+  const title=pick([
+    `Moja opinia o ${COMPANY}`,
+    `Kilka słów po realizacji`,
+    `Jak oceniam współpracę`,
+    `Moja ocena ${serviceNames[service]}`
+  ]);
+
+  return [
+    title,
+    paragraphs.join(" "),
+    `— ${publicSignature()}`,
+    "Wypowiedź powstała z odpowiedzi klienta i jest publikowana za jego zgodą."
+  ].join("\n\n");
+}
+function validateForm(){
+  if(!state.photoDataUrl) return "Dodaj zdjęcie realizacji.";
+  if(!$("city").value.trim()) return "Wpisz miejscowość.";
+  if(!$("service").value) return "Wybierz rodzaj usługi.";
+  if(selectedFacts().length===0&&!$("extra").value.trim()){
+    return "Zaznacz przynajmniej jedną prawdziwą informację albo dodaj własny opis.";
+  }
+  if(!$("approval").checked) return "Zaznacz zgodę i potwierdzenie prawdziwości informacji.";
+  return "";
+}
+function renderPublication(){
+  const error=validateForm();
+  if(error){
+    status($("formStatus"),error,"bad");
+    return false;
+  }
+
+  clearStatus($("formStatus"));
+  state.finalText=buildPublication();
+  state.photoName=`${safeName($("service").value)}-${safeName($("city").value)}-${new Date().toISOString().slice(0,10)}.jpg`;
+
+  $("resultText").textContent=state.finalText;
+  $("resultPhoto").src=state.photoDataUrl;
+  $("result").classList.add("show");
+  $("result").scrollIntoView({behavior:"smooth",block:"start"});
+  return true;
+}
+
+$("photo").addEventListener("change",async e=>{
+  clearStatus($("formStatus"));
+  try{
+    await prepareImage(e.target.files[0]);
+  }catch(err){
+    state.photoDataUrl="";
+    state.photoBlob=null;
+    $("preview").style.display="none";
+    $("photoInfo").textContent="";
+    status($("formStatus"),err.message,"bad");
+  }
+});
+
+$("generate").addEventListener("click",renderPublication);
+$("regenerate").addEventListener("click",()=>{
+  if(renderPublication()){
+    status($("resultStatus"),"Wygenerowano nową wersję na podstawie tych samych odpowiedzi.","good");
+  }
+});
+
+$("copyMailbox").addEventListener("click",async()=>{
+  if(!state.tempEmail||!state.tempPassword){
+    status($("mailboxStatus"),"Skrzynka nie jest jeszcze gotowa.","bad");
+    return;
+  }
+  try{
+    await navigator.clipboard.writeText(`Adres e-mail: ${state.tempEmail}\nHasło: ${state.tempPassword}`);
+    status($("mailboxStatus"),"Adres i hasło zostały skopiowane.","good");
+  }catch{
+    status($("mailboxStatus"),"Przeglądarka zablokowała kopiowanie.","bad");
+  }
+});
+
+$("newMailbox").addEventListener("click",createTemporaryMailbox);
+
+$("copyText").addEventListener("click",async()=>{
+  try{
+    await navigator.clipboard.writeText(state.finalText);
+    status($("resultStatus"),"Tekst został skopiowany.","good");
+  }catch{
+    status($("resultStatus"),"Przeglądarka zablokowała kopiowanie.","bad");
+  }
+});
+
+$("downloadPhoto").addEventListener("click",()=>{
+  if(!state.photoBlob) return;
+  const url=URL.createObjectURL(state.photoBlob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download=state.photoName;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  status($("resultStatus"),"Zdjęcie zostało pobrane.","good");
+});
+
+$("sharePack").addEventListener("click",async()=>{
+  if(!state.photoBlob||!state.finalText) return;
+  const file=new File([state.photoBlob],state.photoName,{type:"image/jpeg"});
+  try{
+    if(navigator.canShare&&navigator.canShare({files:[file]})){
+      await navigator.share({
+        title:"Wypowiedź klienta — Nasz Prąd SA",
+        text:state.finalText,
+        files:[file]
+      });
+    }else if(navigator.share){
+      await navigator.share({
+        title:"Wypowiedź klienta — Nasz Prąd SA",
+        text:state.finalText
+      });
+    }else{
+      status($("resultStatus"),"Ta przeglądarka nie obsługuje udostępniania.","bad");
+    }
+  }catch(err){
+    if(err.name!=="AbortError"){
+      status($("resultStatus"),"Nie udało się udostępnić materiału.","bad");
+    }
+  }
+});
+
+$("openGoogle").addEventListener("click",()=>{
+  window.open(PROFILE_URL,"_blank","noopener,noreferrer");
+});
+
+$("clear").addEventListener("click",()=>{
+  $("photo").value="";
+  $("preview").style.display="none";
+  $("preview").removeAttribute("src");
+  $("photoInfo").textContent="";
+  $("city").value="";
+  $("service").value="";
+  $("signature").selectedIndex=0;
+  $("firstName").value="";
+  $("extra").value="";
+  document.querySelectorAll(".fact").forEach(x=>x.checked=false);
+  document.querySelector('input[name="rating"][value="5"]').checked=true;
+  $("approval").checked=false;
+  $("result").classList.remove("show");
+  state.photoDataUrl="";
+  state.photoBlob=null;
+  state.finalText="";
+  clearStatus($("formStatus"));
+  clearStatus($("resultStatus"));
+});
+
+createTemporaryMailbox();
+</script>
+</body>
+</html>
